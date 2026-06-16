@@ -1,6 +1,7 @@
 <?php
 // Link da sua fonte (Central da TV)
-$lista_origem = "http://xccbuene.sbs"; 
+$lista_origem = "http://m3ustreamflow.sbs/get.php?username=6426298&password=7616445&type=m3u_plus&output=mpegts
+"; 
 
 // Tenta pegar o conteúdo da lista
 $conteudo = @file_get_contents($lista_origem);
@@ -13,7 +14,6 @@ if ($conteudo === false) {
 // Configura o cabeçalho para o formato M3U (o que os players esperam)
 header('Content-Type: application/x-mpegURL');
 header('Content-Disposition: inline; filename="playlist.m3u"');
-
 // Entrega a lista
 echo $conteudo;
 ?>

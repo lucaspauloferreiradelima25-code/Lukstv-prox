@@ -1,46 +1,19 @@
 <?php
-/**
- * PROXY PARA IPTV - LUKA-TV
- * Este arquivo mascara o link real do servidor da Central.
- */
+// Link da sua fonte (Central da TV)
+$lista_origem = "http://xccbuene.sbs"; 
 
-// 1. Configuração do Servidor Real
-$servidorBase = "http://xcbuny.sbs";
+// Tenta pegar o conteúdo da lista
+$conteudo = @file_get_contents($lista_origem);
 
-// 2. Captura os dados enviados pelo player do cliente
-$username = $_GET['username'] ?? '';
-$password = $_GET['password'] ?? '';
-$type = $_GET['type'] ?? 'm3u_plus';
-
-// 3. Verifica se os dados foram enviados
-if (empty($username) || empty($password)) {
-    die("Erro: Dados de acesso não fornecidos.");
+// Se não conseguir acessar, exibe um erro simples
+if ($conteudo === false) {
+    die("Erro: Nao foi possivel acessar a lista de canais. Verifique o link de origem.");
 }
 
-// 4. Monta a URL completa para buscar no servidor da Central
-$urlFinal = $servidorBase . "/get.php?username=" . $username . "&password=" . $password . "&type=" . $type;
+// Configura o cabeçalho para o formato M3U (o que os players esperam)
+header('Content-Type: application/x-mpegURL');
+header('Content-Disposition: inline; filename="playlist.m3u"');
 
-// 5. Inicia a requisição
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $urlFinal);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');
-
-// Executa e fecha a conexão
-$conteudo = curl_exec($ch);
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
-
-// 6. Entrega o conteúdo para o player do cliente
-if ($httpCode == 200) {
-    header("Content-Type: application/x-mpegURL");
-    header("Content-Disposition: attachment; filename=lista.m3u");
-    echo $conteudo;
-} else {
-    // Caso dê erro no servidor da Central
-    header("HTTP/1.0 500 Internal Server Error");
-    echo "Erro ao conectar com o servidor central.";
-}
-?>​
+// Entrega a lista
+echo $conteudo;
+?>

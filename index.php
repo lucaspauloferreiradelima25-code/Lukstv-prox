@@ -30,7 +30,7 @@ curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)')
 
 // Executa e fecha a conexão
 $conteudo = curl_exec($ch);
-$httpCode = curl_getinfo($ch, CURL_HTTP_CODE);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
 // 6. Entrega o conteúdo para o player do cliente

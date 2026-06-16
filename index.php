@@ -8,7 +8,6 @@
 $servidorBase = "http://xcbuny.sbs";
 
 // 2. Captura os dados enviados pelo player do cliente
-// Se o cliente não enviar usuário/senha, o script para aqui
 $username = $_GET['username'] ?? '';
 $password = $_GET['password'] ?? '';
 $type = $_GET['type'] ?? 'm3u_plus';
@@ -21,13 +20,13 @@ if (empty($username) || empty($password)) {
 // 4. Monta a URL completa para buscar no servidor da Central
 $urlFinal = $servidorBase . "/get.php?username=" . $username . "&password=" . $password . "&type=" . $type;
 
-// 5. Inicia a requisição (O "segredo" que faz rodar liso)
+// 5. Inicia a requisição
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $urlFinal);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Pega o conteúdo como texto
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Segue redirecionamentos
-curl_setopt($ch, CURLOPT_TIMEOUT, 30);          // Tempo limite de 30 segundos
-curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'); // Simula um navegador comum
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');
 
 // Executa e fecha a conexão
 $conteudo = curl_exec($ch);
@@ -44,4 +43,4 @@ if ($httpCode == 200) {
     header("HTTP/1.0 500 Internal Server Error");
     echo "Erro ao conectar com o servidor central.";
 }
-?>
+?>​
